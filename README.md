@@ -17,11 +17,11 @@ npm install
 2. Create a local environment file `.env.local` in the project root with these variables (example):
 
 ```env
-MYSQL_HOST=mysql5.sqlpub.com
-MYSQL_PORT=3310
-MYSQL_DATABASE=sqlpubchonghe
-MYSQL_USER=testusersqlpub
-MYSQL_PASSWORD=iDNOaRaK1SOUaDFS
+MYSQL_HOST=example.sqlpub.com
+MYSQL_PORT=ExampleNumber
+MYSQL_DATABASE=ExampleDatabase
+MYSQL_USER=ExampleUser
+MYSQL_PASSWORD=ExamplePassword
 ```
 
 3. Run the development server:
