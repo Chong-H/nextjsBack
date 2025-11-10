@@ -112,11 +112,11 @@ npm install
 2. 在项目根目录创建 `.env.local` 并写入如下环境变量（示例）：
 
 ```env
-MYSQL_HOST=mysql5.sqlpub.com
-MYSQL_PORT=3310
-MYSQL_DATABASE=sqlpubchonghe
-MYSQL_USER=testusersqlpub
-MYSQL_PASSWORD=iDNOaRaK1SOUaDFS
+MYSQL_HOST=example.sqlpub.com
+MYSQL_PORT=ExampleNumber
+MYSQL_DATABASE=ExampleDatabase
+MYSQL_USER=ExampleUser
+MYSQL_PASSWORD=ExamplePassword
 ```
 
 3. 启动开发服务器：
