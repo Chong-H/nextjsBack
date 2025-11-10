@@ -173,11 +173,4 @@ INSERT INTO users (name, age) VALUES ('Alice', 28), ('Bob', 35);
 - 切勿提交包含凭据的文件。生产环境使用 Vercel 的环境变量来保存敏感信息。
 - 使用参数化查询避免 SQL 注入（示例中的 POST 使用 `?` 占位符）。
 
-更多帮助
-
-如果你希望我：
-
-- 把项目改为使用 `@` 别名并自动配置 `next.config.ts` 和 `tsconfig.json`；
-- 添加一个小的 Postman / curl 使用示例脚本；
-- 或者为 `users` 表编写更完整的 CRUD API（分页、验证等）；
 
