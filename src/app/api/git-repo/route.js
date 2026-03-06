@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 const ALLOWED_DOMAIN = 'dpdns.org';
 const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`];
 
+const validateRequest = (request) => {
+  
 
   // 2. 验证域名（和原有逻辑完全一致）
   const origin = request.headers.get('Origin') || '';

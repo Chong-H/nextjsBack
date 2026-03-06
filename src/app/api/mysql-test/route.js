@@ -7,6 +7,8 @@ const ALLOWED_DOMAIN = 'dpdns.org';
 // 允许的子域名（按需扩展，比如 www.dpdns.org、api.dpdns.org）
 const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`];
 
+// 通用验证函数：校验 Token + 域名来源
+const validateRequest = (request) => {
 
   // 2. 严格校验请求来源为 dpdns.org
   const origin = request.headers.get('Origin') || '';
