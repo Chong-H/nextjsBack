@@ -102,8 +102,8 @@ export async function GET(request) {
 // ====== 2. POST：新增仓库（对标 SpringBoot 的 @PostMapping）======
 // 调用示例：POST /api/git-repos + JSON 请求体
 export async function POST(request) {
-  const validation = validateRequest(request);
-  if (!validation.valid) return validation.response;
+  // const validation = validateRequest(request);
+  // if (!validation.valid) return validation.response;
 
   try {
     const { user_id, repo_name, repo_url, default_branch } = await request.json();
@@ -137,8 +137,8 @@ export async function POST(request) {
 // ====== 3. PUT：更新仓库（对标 SpringBoot 的 @PutMapping）======
 // 调用示例：PUT /api/git-repos + JSON 请求体（含 id）
 export async function PUT(request) {
-  const validation = validateRequest(request);
-  if (!validation.valid) return validation.response;
+  // const validation = validateRequest(request);
+  // if (!validation.valid) return validation.response;
 
   try {
     const { id, repo_name, repo_url, default_branch } = await request.json();
@@ -195,8 +195,8 @@ export async function PUT(request) {
 // ====== 4. DELETE：删除仓库（对标 SpringBoot 的 @DeleteMapping）======
 // 调用示例：DELETE /api/git-repos?id=1
 export async function DELETE(request) {
-  const validation = validateRequest(request);
-  if (!validation.valid) return validation.response;
+  // const validation = validateRequest(request);
+  // if (!validation.valid) return validation.response;
 
   try {
     const { searchParams } = new URL(request.url);
