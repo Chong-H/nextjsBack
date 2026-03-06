@@ -4,21 +4,30 @@ import { NextResponse } from 'next/server';
 // 复用你原有的验证逻辑（复制过来，保证权限一致）
 const ALLOWED_DOMAIN = 'dpdns.org';
 const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`, `proxy.chonghe.${ALLOWED_DOMAIN}`];
-
 const validateRequest = (request) => {
-  
+  const ALLOWED_DOMAIN = 'dpdns.org'; // 核心：只验证后缀
 
-  // 2. 验证域名（和原有逻辑完全一致）
+  // 1. 获取 Origin/Referer 头
   const origin = request.headers.get('Origin') || '';
   const referer = request.headers.get('Referer') || '';
+
+  // 2. 解析域名（处理非法 URL 容错）
   const parseDomain = (url) => {
-    try { return new URL(url).hostname; } catch { return ''; }
+    try {
+      return new URL(url).hostname;
+    } catch (e) {
+      return '';
+    }
   };
   const originDomain = parseDomain(origin);
   const refererDomain = parseDomain(referer);
-  const isFromAllowedDomain = ALLOWED_SUBDOMAINS.includes(originDomain) || ALLOWED_SUBDOMAINS.includes(refererDomain);
+
+  // 3. 核心修改：验证「域名是否以 dpdns.org 结尾」（而非精确匹配）
+  const isFromAllowedDomain = 
+    (originDomain && originDomain.endsWith(ALLOWED_DOMAIN)) || 
+    (refererDomain && refererDomain.endsWith(ALLOWED_DOMAIN));
   
-  if (!isFromAllowedDomain || (!origin && !referer)) {
+  if (!isFromAllowedDomain) {
     return {
       valid: false,
       response: NextResponse.json(
@@ -28,9 +37,19 @@ const validateRequest = (request) => {
     };
   }
 
+  // 4. 无 Origin/Referer 直接拒绝
+  if (!origin && !referer) {
+    return {
+      valid: false,
+      response: NextResponse.json(
+        { success: false, message: 'Forbidden: 缺少 Origin/Referer 验证头' },
+        { status: 403 }
+      )
+    };
+  }
+
   return { valid: true, origin };
 };
-
 // OPTIONS 预检请求（仅针对 git-repos 接口）
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin') || `https://${ALLOWED_DOMAIN}`;
