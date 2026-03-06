@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 // 复用你原有的验证逻辑（复制过来，保证权限一致）
 const ALLOWED_DOMAIN = 'dpdns.org';
 const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`, `proxy.chonghe.${ALLOWED_DOMAIN}`];
+
 const validateRequest = (request) => {
   const ALLOWED_DOMAIN = 'dpdns.org'; // 核心：只验证后缀
 
@@ -69,8 +70,8 @@ export async function OPTIONS(request) {
 // ====== 1. GET：查询仓库（对标 SpringBoot 的 @GetMapping）======
 // 调用示例：GET /api/git-repos?user_id=1
 export async function GET(request) {
-  const validation = validateRequest(request);
-  if (!validation.valid) return validation.response;
+//   const validation = validateRequest(request);
+//   if (!validation.valid) return validation.response;
 
   try {
     const { searchParams } = new URL(request.url);
