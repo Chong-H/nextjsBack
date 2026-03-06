@@ -7,20 +7,6 @@ const ALLOWED_DOMAIN = 'dpdns.org';
 // 允许的子域名（按需扩展，比如 www.dpdns.org、api.dpdns.org）
 const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`];
 
-// 通用验证函数：校验 Token + 域名来源
-const validateRequest = (request) => {
-  // 1. 验证专属 Token（从环境变量读取，避免硬编码）
-  const authToken = request.headers.get('X-Worker-Auth-Token');
-  const validToken = process.env.WORKER_AUTH_TOKEN;
-  if (!authToken || authToken !== validToken) {
-    return {
-      valid: false,
-      response: NextResponse.json(
-        { success: false, message: 'Unauthorized: 无效的验证 Token' },
-        { status: 401 }
-      )
-    };
-  }
 
   // 2. 严格校验请求来源为 dpdns.org
   const origin = request.headers.get('Origin') || '';

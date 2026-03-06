@@ -5,19 +5,6 @@ import { NextResponse } from 'next/server';
 const ALLOWED_DOMAIN = 'dpdns.org';
 const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`];
 
-const validateRequest = (request) => {
-  // 1. 验证 Token（和原有逻辑完全一致）
-  const authToken = request.headers.get('X-Worker-Auth-Token');
-  const validToken = process.env.WORKER_AUTH_TOKEN;
-  if (!authToken || authToken !== validToken) {
-    return {
-      valid: false,
-      response: NextResponse.json(
-        { success: false, message: 'Unauthorized: 无效的验证 Token' },
-        { status: 401 }
-      )
-    };
-  }
 
   // 2. 验证域名（和原有逻辑完全一致）
   const origin = request.headers.get('Origin') || '';
