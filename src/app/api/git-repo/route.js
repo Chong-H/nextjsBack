@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 // 复用你原有的验证逻辑（复制过来，保证权限一致）
 const ALLOWED_DOMAIN = 'dpdns.org';
-const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`];
+const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`, `proxy.chonghe.${ALLOWED_DOMAIN}`];
 
 const validateRequest = (request) => {
   
