@@ -1,78 +1,22 @@
 import pool from '../../../../lib/mysql'; // 复用原有数据库连接池
 import { NextResponse } from 'next/server';
 
-// 复用你原有的验证逻辑（复制过来，保证权限一致）
-const ALLOWED_DOMAIN = 'dpdns.org';
-const ALLOWED_SUBDOMAINS = [ALLOWED_DOMAIN, `www.${ALLOWED_DOMAIN}`, `chonghe.${ALLOWED_DOMAIN}`, `proxy.chonghe.${ALLOWED_DOMAIN}`];
-
-const validateRequest = (request) => {
-  const ALLOWED_DOMAIN = 'dpdns.org'; // 核心：只验证后缀
-
-  // 1. 获取 Origin/Referer 头
-  const origin = request.headers.get('Origin') || '';
-  const referer = request.headers.get('Referer') || '';
-
-  // 2. 解析域名（处理非法 URL 容错）
-  const parseDomain = (url) => {
-    try {
-      return new URL(url).hostname;
-    } catch (e) {
-      return '';
-    }
-  };
-  const originDomain = parseDomain(origin);
-  const refererDomain = parseDomain(referer);
-
-  // 3. 核心修改：验证「域名是否以 dpdns.org 结尾」（而非精确匹配）
-  const isFromAllowedDomain = 
-    (originDomain && originDomain.endsWith(ALLOWED_DOMAIN)) || 
-    (refererDomain && refererDomain.endsWith(ALLOWED_DOMAIN));
-  
-  if (!isFromAllowedDomain) {
-    return {
-      valid: false,
-      response: NextResponse.json(
-        { success: false, message: `Forbidden: 仅允许 ${ALLOWED_DOMAIN} 域名访问` },
-        { status: 403 }
-      )
-    };
-  }
-
-  // 4. 无 Origin/Referer 直接拒绝
-  if (!origin && !referer) {
-    return {
-      valid: false,
-      response: NextResponse.json(
-        { success: false, message: 'Forbidden: 缺少 Origin/Referer 验证头' },
-        { status: 403 }
-      )
-    };
-  }
-
-  return { valid: true, origin };
-};
 // OPTIONS 预检请求（仅针对 git-repos 接口）
 export async function OPTIONS(request) {
-  const origin = request.headers.get('Origin') || `https://${ALLOWED_DOMAIN}`;
-  if (origin.includes(ALLOWED_DOMAIN)) {
-    return new NextResponse(null, {
-      headers: {
-        'Access-Control-Allow-Origin': origin,
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'X-Worker-Auth-Token, Content-Type',
-        'Access-Control-Max-Age': '86400'
-      }
-    });
-  }
-  return new NextResponse(null, { status: 403 });
+  const origin = request.headers.get('Origin') || '*';
+  return new NextResponse(null, {
+    headers: {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Worker-Auth-Token, Content-Type',
+      'Access-Control-Max-Age': '86400'
+    }
+  });
 }
 
 // ====== 1. GET：查询仓库（对标 SpringBoot 的 @GetMapping）======
 // 调用示例：GET /api/git-repos?user_id=1
 export async function GET(request) {
-//   const validation = validateRequest(request);
-//   if (!validation.valid) return validation.response;
-
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id');
@@ -102,9 +46,6 @@ export async function GET(request) {
 // ====== 2. POST：新增仓库（对标 SpringBoot 的 @PostMapping）======
 // 调用示例：POST /api/git-repos + JSON 请求体
 export async function POST(request) {
-  // const validation = validateRequest(request);
-  // if (!validation.valid) return validation.response;
-
   try {
     const { user_id, repo_name, repo_url, default_branch } = await request.json();
     // 必传字段校验
@@ -137,9 +78,6 @@ export async function POST(request) {
 // ====== 3. PUT：更新仓库（对标 SpringBoot 的 @PutMapping）======
 // 调用示例：PUT /api/git-repos + JSON 请求体（含 id）
 export async function PUT(request) {
-  // const validation = validateRequest(request);
-  // if (!validation.valid) return validation.response;
-
   try {
     const { id, repo_name, repo_url, default_branch } = await request.json();
     if (!id) {
@@ -195,9 +133,6 @@ export async function PUT(request) {
 // ====== 4. DELETE：删除仓库（对标 SpringBoot 的 @DeleteMapping）======
 // 调用示例：DELETE /api/git-repos?id=1
 export async function DELETE(request) {
-  // const validation = validateRequest(request);
-  // if (!validation.valid) return validation.response;
-
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

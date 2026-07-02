@@ -1,0 +1,56 @@
+@startuml
+title 通用管理后端系统类图
+
+skinparam shadowing false
+skinparam linetype ortho
+
+package "Database_Layer" {
+    class DatabasePool {
+        - config
+        - pool
+        + query(sql, params)
+        + getConnection()
+    }
+}
+
+package "API_Controller_Layer" {
+    class GitRepoController {
+        - ALLOWED_DOMAIN
+        - ALLOWED_SUBDOMAINS
+        - pool
+        + OPTIONS(request)
+        + GET(request)
+        + POST(request)
+        + PUT(request)
+        + DELETE(request)
+        + validateRequest(request)
+    }
+}
+
+package "Data_Model" {
+    class UserGitRepo {
+        + id
+        + repo_name
+        + repo_url
+        + default_branch
+        + created_at
+    }
+}
+
+package "Framework_and_External" {
+    class NextJS
+    class MySQL
+    class BrowserClient
+}
+
+' =========================
+' 关系定义
+' =========================
+GitRepoController --> DatabasePool : uses
+DatabasePool --> MySQL : connects
+
+BrowserClient --> GitRepoController : HTTP Request
+GitRepoController --> UserGitRepo : CRUD
+GitRepoController ..> NextJS : API Route
+
+@enduml
